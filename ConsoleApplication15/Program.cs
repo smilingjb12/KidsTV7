@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ConsoleApplication15
 {
-    public enum Fault
+    public enum FaultType
     {
         ConstOne, ConstZero, CfiByFront, 
         CfiByFall, CfidByFrontSet0, CfidByFrontSet1,
@@ -14,7 +14,7 @@ namespace ConsoleApplication15
     public class Cell
     {
         private int val;
-        private Fault? fault;
+        private FaultType? fault;
         private Cell victim;
         private bool isVictim;
 
@@ -26,7 +26,7 @@ namespace ConsoleApplication15
             isVictim = false;
         }
 
-        public Fault? Fault
+        public FaultType? Fault
         {
             get { return fault; }
         }
@@ -43,47 +43,47 @@ namespace ConsoleApplication15
                 this.val = val;
                 return;
             }
-            if (this.fault == ConsoleApplication15.Fault.ConstOne || this.fault == ConsoleApplication15.Fault.ConstZero)
+            if (this.fault == FaultType.ConstOne || this.fault == FaultType.ConstZero)
             {
                 return;
             }
             int prevVal = this.val;
-            if (this.fault == ConsoleApplication15.Fault.CfiByFront)
+            if (this.fault == FaultType.CfiByFront)
             {
                 if (Rising(prevVal, val))
                 {
                     victim.InvertValue();
                 }
             }
-            else if (this.fault == ConsoleApplication15.Fault.CfiByFall)
+            else if (this.fault == FaultType.CfiByFall)
             {
                 if (Falling(prevVal, val))
                 {
                     victim.InvertValue();
                 }
             }
-            else if (this.fault == ConsoleApplication15.Fault.CfidByFrontSet1)
+            else if (this.fault == FaultType.CfidByFrontSet1)
             {
                 if (Rising(prevVal, val))
                 {
                     victim.val = 1;
                 }
             }
-            else if (this.fault == ConsoleApplication15.Fault.CfidByFrontSet0)
+            else if (this.fault == FaultType.CfidByFrontSet0)
             {
                 if (Rising(prevVal, val))
                 {
                     victim.val = 0;
                 }
             }
-            else if (this.fault == ConsoleApplication15.Fault.CfidByFallSet1)
+            else if (this.fault == FaultType.CfidByFallSet1)
             {
                 if (Falling(prevVal, val))
                 {
                     victim.val = 1;
                 }
             }
-            else if (this.fault == ConsoleApplication15.Fault.CfidByFallSet0)
+            else if (this.fault == FaultType.CfidByFallSet0)
             {
                 if (Falling(prevVal, val))
                 {
@@ -95,8 +95,8 @@ namespace ConsoleApplication15
 
         public int Read()
         {
-            if (fault == ConsoleApplication15.Fault.ConstOne) return 1;
-            if (fault == ConsoleApplication15.Fault.ConstZero) return 0;
+            if (fault == FaultType.ConstOne) return 1;
+            if (fault == FaultType.ConstZero) return 0;
             return val;
         }
 
@@ -104,8 +104,8 @@ namespace ConsoleApplication15
         {
             if (isVictim) return "V";
             if (victim != null) return "A";
-            if (fault == ConsoleApplication15.Fault.ConstOne) return "O";
-            if (fault == ConsoleApplication15.Fault.ConstZero) return "Z";
+            if (fault == FaultType.ConstOne) return "O";
+            if (fault == FaultType.ConstZero) return "Z";
             if (val == 0) return ".";
             return val.ToString();
         }
@@ -125,9 +125,9 @@ namespace ConsoleApplication15
             return val1 - val2 == 1;
         }
 
-        public void AssignFault(Fault fault, Cell victim = null)
+        public void AssignFault(FaultType faultType, Cell victim = null)
         {
-            this.fault = fault;
+            this.fault = faultType;
             if (victim != null)
             {
                 this.victim = victim;
@@ -213,11 +213,11 @@ namespace ConsoleApplication15
                     if (i == j) continue;
                     ram[j].Write(val.Invert());
                 }
-                //for (int j = 0; j < Ram.Size; ++j)
-                //{
-                //    if (i == j) continue;
-                //    ram[j].Read();
-                //}
+                for (int j = 0; j < Ram.Size; ++j)
+                {
+                    if (i == j) continue;
+                    ram[j].Read();
+                }
                 int baseCell = ram[i].Read();
                 if (baseCell != val) badAddresses.Add(i);
             }
@@ -284,10 +284,10 @@ namespace ConsoleApplication15
                 int index = random.Next(Ram.Size);
                 if (ram[index].Fault == null)
                 {
-                    ram[index].AssignFault(new[] { Fault.ConstOne, Fault.ConstZero }[random.Next(2)]);
+                    ram[index].AssignFault(new[] { FaultType.ConstOne, FaultType.ConstZero }[random.Next(2)]);
                 }
             }
-            var constFaultsCount = ram.Cells.Count(c => new[] {Fault.ConstOne, Fault.ConstZero}.Any(f => f == c.Fault));
+            var constFaultsCount = ram.Cells.Count(c => new[] {FaultType.ConstOne, FaultType.ConstZero}.Any(f => f == c.Fault));
             Console.WriteLine("constant 0/1 faults: {0}", constFaultsCount);
 
             for (int i = 0; i < Ram.Size; ++i) // other faults
@@ -296,14 +296,14 @@ namespace ConsoleApplication15
                 Cell victim = ram[random.Next(Ram.Size)];
                 if (new[] {aggressor, victim}.All(c => c.Fault == null && !c.IsVictim))
                 {
-                    var allFaults = Enum.GetValues(typeof (Fault)).Cast<Fault>();
+                    var allFaults = Enum.GetValues(typeof (FaultType)).Cast<FaultType>();
                     var randomFault = allFaults
-                        .Except(new[] {Fault.ConstOne, Fault.ConstZero})
+                        .Except(new[] {FaultType.ConstOne, FaultType.ConstZero})
                         .ElementAt(random.Next(allFaults.Count() - 2));
                     aggressor.AssignFault(randomFault, victim: victim);
                 }
             }
-            var otherFaultsCount = ram.Cells.Count(c => c.Fault != null && c.Fault != Fault.ConstOne && c.Fault != Fault.ConstZero);
+            var otherFaultsCount = ram.Cells.Count(c => c.Fault != null && c.Fault != FaultType.ConstOne && c.Fault != FaultType.ConstZero);
             Console.WriteLine("other faults: {0}", otherFaultsCount);
         }
 
