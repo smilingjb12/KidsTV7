@@ -4,3 +4,9 @@ C:\Users\Fluffy\Documents\Visual Studio 2012\Projects\ConsoleApplication15\Conso
 C:\Users\Fluffy\Documents\Visual Studio 2012\Projects\ConsoleApplication15\ConsoleApplication15\obj\Debug\ConsoleApplication15.csprojResolveAssemblyReference.cache
 C:\Users\Fluffy\Documents\Visual Studio 2012\Projects\ConsoleApplication15\ConsoleApplication15\obj\Debug\ConsoleApplication15.exe
 C:\Users\Fluffy\Documents\Visual Studio 2012\Projects\ConsoleApplication15\ConsoleApplication15\obj\Debug\ConsoleApplication15.pdb
+D:\Предметы\КиДСВТ\7\ConsoleApplication15\ConsoleApplication15\bin\Debug\ConsoleApplication15.exe.config
+D:\Предметы\КиДСВТ\7\ConsoleApplication15\ConsoleApplication15\obj\Debug\ConsoleApplication15.exe
+D:\Предметы\КиДСВТ\7\ConsoleApplication15\ConsoleApplication15\obj\Debug\ConsoleApplication15.pdb
+D:\Предметы\КиДСВТ\7\ConsoleApplication15\ConsoleApplication15\bin\Debug\ConsoleApplication15.exe
+D:\Предметы\КиДСВТ\7\ConsoleApplication15\ConsoleApplication15\bin\Debug\ConsoleApplication15.pdb
+D:\Предметы\КиДСВТ\7\ConsoleApplication15\ConsoleApplication15\obj\Debug\ConsoleApplication15.csprojResolveAssemblyReference.cache
